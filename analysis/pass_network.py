@@ -5,6 +5,7 @@ from data.processing import get_score, get_match_teams, has_qualifier, sort_data
 def prepare_for_pass_network(match_id, team, include_substitution=False):
     events = get_match_events(match_id)
     events = sort_data(events)
+    events = events[events['team'] == team]
 
     if not include_substitution:
         sub_idx = events[events['type'] == 'SubstitutionOff'].index
@@ -16,9 +17,10 @@ def prepare_for_pass_network(match_id, team, include_substitution=False):
     passes['recipient_id'] = passes['player_id'].shift(-1)
     passes = passes[passes['recipient_id'].notna()]
     passes = passes[passes['outcome_type'] == 'Successful']
-    passes = passes[passes['team'] == team]
+   
+    last_minute = passes['minute'].max()
 
-    return passes
+    return passes, last_minute
 
 def average_location(df):
     average_locations = df.groupby('player_id').agg({'x':['mean'], 'y':['mean', 'count']})

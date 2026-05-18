@@ -78,12 +78,13 @@ def passes_plot(game_id, team, player=None, successful_only=False, color="#3d91c
 
 
 def pass_network_plot(game_id, team, no_passes_threshold=2, include_substitution=False):
-    df=prepare_for_pass_network(game_id, team, include_substitution)
+    df, last_minute=prepare_for_pass_network(game_id, team, include_substitution)
     avg_loc = average_location(df)
     pb = pass_between(df, no_passes_threshold)
-
+    
     pitch = VerticalPitch(pitch_type='opta', pitch_color='#0C0D0E', line_color='#ebebeb', pad_bottom=.1)
     fig, ax = pitch.draw(figsize=(10, 8), constrained_layout=True, tight_layout=False)
+    ax.set_title(f"0 - {last_minute}'", color='white', fontsize=12)
 
     pitch.lines(pb['x'], pb['y'], pb['x_end'], pb['y_end'], ax=ax, color="#d5ecfc", alpha=0.6, linewidth=pb['pass_count'], zorder=1, alpha_start=0.4)
 

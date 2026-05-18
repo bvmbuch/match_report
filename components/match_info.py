@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 from data.queries import get_available_seasons, get_available_leagues, get_available_teams, get_available_matches, get_match_events
 from data.processing import get_score, get_match_teams, get_league_season_date
-from analysis.stats import get_passes_count, get_completed_passes_count, get_completion_rate, get_passes_into_final_3rd_count, get_xg, get_npxg, get_bigChances
+from analysis.stats import get_passes_count, get_completed_passes_count, get_completion_rate, get_passes_into_final_3rd_count, get_xg, get_npxg, get_bigChances, get_longpass_prcnt, get_field_tilt, get_ppda
 from analysis.plots import pass_network_plot
 
 
@@ -46,6 +46,9 @@ def match_info(game_id):
         home_xg, away_xg = get_xg(game_id)
         home_npxg, away_npxg = get_npxg(game_id)
         home_big_chances, away_big_chances = get_bigChances(game_id)
+        home_long_pass_prcnt, away_long_pass_prcnt = get_longpass_prcnt(game_id)
+        home_field_tilt, away_field_tilt = get_field_tilt(game_id)
+        home_ppda, away_ppda = get_ppda(game_id)    
         st.markdown("<br><br>", unsafe_allow_html=True)
         stats_html = f"""
         <div style="
@@ -95,6 +98,21 @@ def match_info(game_id):
                 <span style="font-size: 20px; font-weight: bold; width: 40%; text-align: left;">{home_passes_final_3rd}</span>
                 <span style="color: #888; width: 40%; text-align: center;">Passes into Final Third</span>
                 <span style="font-size: 20px; font-weight: bold; width: 40%; text-align: right;">{away_passes_final_3rd}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #333;">
+                <span style="font-size: 20px; font-weight: bold; width: 40%; text-align: left;">{home_long_pass_prcnt:.1%}</span>
+                <span style="color: #888; width: 40%; text-align: center;">Long Passes</span>
+                <span style="font-size: 20px; font-weight: bold; width: 40%; text-align: right;">{away_long_pass_prcnt:.1%}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #333;">
+                <span style="font-size: 20px; font-weight: bold; width: 40%; text-align: left;">{home_field_tilt:.1%}</span>
+                <span style="color: #888; width: 40%; text-align: center;">Field Tilt</span>
+                <span style="font-size: 20px; font-weight: bold; width: 40%; text-align: right;">{away_field_tilt:.1%}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #333;">
+                <span style="font-size: 20px; font-weight: bold; width: 40%; text-align: left;">{home_ppda:.1f}</span>
+                <span style="color: #888; width: 40%; text-align: center;">PPDA</span>
+                <span style="font-size: 20px; font-weight: bold; width: 40%; text-align: right;">{away_ppda:.1f}</span>
             </div>
             
 
