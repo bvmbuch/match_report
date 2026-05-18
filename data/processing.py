@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from data.queries import get_available_seasons, get_available_leagues, get_available_teams, get_available_matches, get_match_events, get_match_goals
 
 
@@ -97,14 +98,6 @@ def is_end_in_final_3rd_pitch(df):
 def get_passes(game_id):
     df=get_match_events(game_id)
     return df[df['type']=='Pass']
-    
-def get_passes_into_final_3rd_pitch(game_id):
-
-    passes=get_passes(game_id)
-    passes=is_start_in_final_3rd_pitch(passes)
-    passes=is_end_in_final_3rd_pitch(passes)
-   
-    return passes[(passes['is_start_in_final_3rd'] == False) & (passes['is_end_in_final_3rd'] == True)]
 
 def get_all_shots(game_id):
     df=get_match_events(game_id)
@@ -127,3 +120,65 @@ def get_players_with_shots(game_id):
     
 
     return players_home, players_away
+
+def get_players_with_passes(game_id):
+    passes = get_passes(game_id)
+    home_team, away_team = get_match_teams(game_id)
+    players_home = passes[passes['team'] == home_team]['player'].unique().tolist()
+    players_away = passes[passes['team'] == away_team]['player'].unique().tolist()
+    
+
+    return players_home, players_away
+
+
+#przejrzec te flagi czy napewno sa popranwe z opta
+def add_progressive_flags_opta(df):
+    df = df.copy()
+    
+    dist_start = np.sqrt((100 - df['x'])**2 + (50 - df['y'])**2)
+    dist_end = np.sqrt((100 - df['end_x'])**2 + (50 - df['end_y'])**2)
+    
+    # 25% bliżej bramki
+    progression_pct = (dist_start - dist_end) / dist_start
+    closer_25pct = progression_pct >= 0.25
+    
+    in_attacking_two_thirds = df['x'] >= (100 / 3)
+    
+    # wykluczenia stałych fragmentów
+    qualifiers_str = df['qualifiers'].astype(str)
+    set_piece = (qualifiers_str.str.contains('CornerTaken', na=False) |
+                 qualifiers_str.str.contains('FreekickTaken', na=False) |
+                 qualifiers_str.str.contains('ThrowIn', na=False))
+    
+    # progressive pass wg Opta
+    df['is_prog_pass'] = (
+        (df['type'] == 'Pass') &
+        (df['outcome_type'] == 'Successful') &
+        (~set_piece) &
+        in_attacking_two_thirds &
+        closer_25pct
+    )
+    
+    return df
+
+def is_in_final_3rd_pitch(df):
+    df['is_final_3rd'] = df['x']>66.6
+    
+    return df
+
+def is_into_final_3rd_pitch(df):
+    df=is_start_in_final_3rd_pitch(df)
+    df=is_end_in_final_3rd_pitch(df)
+    df['is_into_final_3rd'] = (df['is_start_in_final_3rd'] == False) & (df['is_end_in_final_3rd'] == True)
+    
+    return df
+    
+#bardzo podobna funkcja, ale tutaj zostawiamy ją narazie potem do zmiany
+
+def get_passes_into_final_3rd_pitch(game_id):
+
+    passes=get_passes(game_id)
+    passes=is_start_in_final_3rd_pitch(passes)
+    passes=is_end_in_final_3rd_pitch(passes)
+   
+    return passes[(passes['is_start_in_final_3rd'] == False) & (passes['is_end_in_final_3rd'] == True)]

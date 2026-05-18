@@ -4,7 +4,7 @@ import pandas as pd
 from data.queries import get_available_seasons, get_available_leagues, get_available_teams, get_available_matches, get_match_events
 from data.processing import get_score, get_match_teams, get_league_season_date
 from analysis.stats import get_passes_count, get_completed_passes_count, get_completion_rate, get_passes_into_final_3rd_count, get_xg, get_npxg, get_bigChances
-
+from analysis.plots import pass_network_plot
 
 
 
@@ -17,7 +17,7 @@ def match_info(game_id):
 
     info_text=f"{league} | {season} | {date}"
 
-    col1, col2, col3 = st.columns([5, 3, 5])
+    col1, col2, col3 = st.columns([5, 8, 5])
 
     with col1:
         st.markdown(f"<h1 style='text-align: right;'>{home_team}</h1>", unsafe_allow_html=True)
@@ -34,6 +34,10 @@ def match_info(game_id):
 
     col1, col2, col3 = st.columns([4,2,4])
 
+    with col1:
+        fig= pass_network_plot(game_id, home_team)
+        st.pyplot(fig, transparent=True)
+
     with col2:
         home_passes, away_passes = get_passes_count(game_id)
         home_completed_passes, away_completed_passes = get_completed_passes_count(game_id)
@@ -42,14 +46,14 @@ def match_info(game_id):
         home_xg, away_xg = get_xg(game_id)
         home_npxg, away_npxg = get_npxg(game_id)
         home_big_chances, away_big_chances = get_bigChances(game_id)
-
+        st.markdown("<br><br>", unsafe_allow_html=True)
         stats_html = f"""
         <div style="
             background-color: #1e1e2e;
             border: 1px solid #444;
             border-radius: 12px;
             padding: 24px;
-            margin: 16px 0;
+            margin: 100 px 0 16px 0;
             width: 100%;
         ">
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #333;">
@@ -98,6 +102,10 @@ def match_info(game_id):
         """
 
         st.markdown(stats_html, unsafe_allow_html=True)
+
+    with col3:
+        fig= pass_network_plot(game_id, away_team)
+        st.pyplot(fig, transparent=True)
         
 
 

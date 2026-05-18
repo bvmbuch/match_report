@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import mplsoccer as mpl
 
+from components.passes import render_passes_tab
 from data.queries import get_available_seasons, get_available_leagues, get_available_teams, get_available_matches
 from components.match_info import match_info
 from components.shots import render_shots_tab
@@ -52,4 +53,6 @@ with tab2:
         render_shots_tab(matches_dict[option4])
 with tab3:
     st.header("Passes")
-    st.write("This is where the passes will be displayed.")
+    if option4 != "Select a match":
+        
+        render_passes_tab(matches_dict[option4])

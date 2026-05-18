@@ -148,6 +148,7 @@ def add_xg_to_shots(shots_df, parse_qualifiers=True):
 
 def team_xg_events(game_id, team):
     shots = get_all_shots(game_id)
+    shots = shots[~shots['qualifiers'].apply(lambda x: has_qualifier(x, 'OwnGoal'))]
     shots_with_xg = add_xg_to_shots(shots)
     team_shots = shots_with_xg[shots_with_xg['team'] == team]
 
@@ -156,9 +157,21 @@ def team_xg_events(game_id, team):
 
 def player_xg_events(game_id, team, player):
     shots = get_all_shots(game_id)
+    shots = shots[~shots['qualifiers'].apply(lambda x: has_qualifier(x, 'OwnGoal'))]
     shots_with_xg = add_xg_to_shots(shots)
     player_shots = shots_with_xg[(shots_with_xg['player'] == player) & (shots_with_xg['team'] == team)]
 
     
     return player_shots
 
+#brakuje owngoal, potrzebne do naprawy
+def team_xg_table(game_id, team):
+    shots = team_xg_events(game_id, team)
+    shots = shots[~shots['qualifiers'].apply(lambda x: has_qualifier(x, 'OwnGoal'))]
+    table_df = shots[['player', 'xg', 'is_shot', 'is_goal']].groupby('player').agg(
+        xg=('xg', 'sum'),
+        shots=('is_shot', 'count'),
+        goals=('is_goal', lambda x: (x == 'true').sum())
+    ).sort_values(by='xg', ascending=False).reset_index()
+    
+    return table_df
