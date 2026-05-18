@@ -152,3 +152,13 @@ def team_xg_events(game_id, team):
     team_shots = shots_with_xg[shots_with_xg['team'] == team]
 
     return team_shots
+
+
+def player_xg_events(game_id, team, player):
+    shots = get_all_shots(game_id)
+    shots_with_xg = add_xg_to_shots(shots)
+    player_shots = shots_with_xg[(shots_with_xg['player'] == player) & (shots_with_xg['team'] == team)]
+
+    
+    return player_shots
+

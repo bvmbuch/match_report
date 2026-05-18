@@ -3,6 +3,7 @@ import psycopg2
 import pandas as pd
 from data.supabase_client import get_connection
 
+@st.cache_data(ttl=3600)
 def get_available_seasons():
     with get_connection() as conn:
         with conn.cursor() as cursor:
@@ -11,6 +12,7 @@ def get_available_seasons():
             df=pd.DataFrame(query_result, columns=[desc[0] for desc in cursor.description])
             return df['season'].to_list()
         
+@st.cache_data(ttl=3600)
 def get_available_leagues(season):
     with get_connection() as conn:
         with conn.cursor() as cursor:
@@ -20,6 +22,7 @@ def get_available_leagues(season):
             return df['league'].to_list()
         
 
+@st.cache_data(ttl=3600)
 def get_available_teams(season, league):
     with get_connection() as conn:
         with conn.cursor() as cursor:
@@ -29,6 +32,7 @@ def get_available_teams(season, league):
             return df['team'].to_list()
 
 
+@st.cache_data(ttl=3600)
 def get_available_matches(season, league, team):
     with get_connection() as conn:
         with conn.cursor() as cursor:
@@ -37,7 +41,7 @@ def get_available_matches(season, league, team):
             df=pd.DataFrame(query_result, columns=[desc[0] for desc in cursor.description])
             return df
         
-
+@st.cache_data(ttl=3600)
 def get_match_events(game_id):
     with get_connection() as conn:
         with conn.cursor() as cursor:
@@ -46,6 +50,7 @@ def get_match_events(game_id):
             df=pd.DataFrame(query_result, columns=[desc[0] for desc in cursor.description])
             return df
         
+@st.cache_data(ttl=3600)
 def get_match_goals(game_id):
     with get_connection() as conn:
         with conn.cursor() as cursor:
@@ -56,10 +61,20 @@ def get_match_goals(game_id):
 
 
 
+@st.cache_data(ttl=3600)
 def get_teams_and_teams_id(season, league):
     with get_connection() as conn:
         with conn.cursor() as cursor:
             cursor.execute("SELECT DISTINCT team, team_id FROM match_events WHERE season = %s AND league = %s", (season, league))
+            query_result = cursor.fetchall()
+            df=pd.DataFrame(query_result, columns=[desc[0] for desc in cursor.description])
+            return df
+        
+
+def get_all_shots(game_id):
+    with get_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM match_events WHERE game_id = %s AND is_shot = 'true'", (game_id,))
             query_result = cursor.fetchall()
             df=pd.DataFrame(query_result, columns=[desc[0] for desc in cursor.description])
             return df

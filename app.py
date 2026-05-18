@@ -46,7 +46,7 @@ with tab1:
     if option4 != "Select a match":
         match_info(matches_dict[option4])
 with tab2:
-    st.header("Shots")
+    #st.header("Shots")
     if option4 != "Select a match":
 
         render_shots_tab(matches_dict[option4])

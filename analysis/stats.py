@@ -63,7 +63,35 @@ def get_xg(game_id):
     shots_away = shots[shots['team'] == away_team]
 
 
-    xg_home = shots_home['xg'].sum()
-    xg_away = shots_away['xg'].sum()
+    home_xg = shots_home['xg'].sum()
+    away_xg = shots_away['xg'].sum()
 
-    return xg_home, xg_away
+    return home_xg, away_xg
+
+def get_npxg(game_id):
+    shots= get_all_shots(game_id)
+    home_team, away_team = get_match_teams(game_id)
+    shots=add_xg_to_shots(shots)
+
+    np_shots=shots[~shots['qualifiers'].apply(lambda x: has_qualifier(x, 'Penalty'))]
+
+    np_shots_home = np_shots[np_shots['team'] == home_team]
+    np_shots_away = np_shots[np_shots['team'] == away_team]
+
+    home_npxg = np_shots_home['xg'].sum()
+    away_npxg = np_shots_away['xg'].sum()
+
+    return home_npxg, away_npxg
+
+
+def get_bigChances(game_id):
+    shots = get_all_shots(game_id)
+    home_team, away_team = get_match_teams(game_id)
+
+    shots=add_xg_to_shots(shots)
+
+    big_chances_home = shots[(shots['team'] == home_team) & (shots['qualifiers'].apply(lambda x: has_qualifier(x, 'BigChance')))]
+    big_chances_away = shots[(shots['team'] == away_team) & (shots['qualifiers'].apply(lambda x: has_qualifier(x, 'BigChance')))]
+
+    return len(big_chances_home), len(big_chances_away)
+    

@@ -111,4 +111,19 @@ def get_all_shots(game_id):
     
     return df[df['is_shot']=='true']
 
+def get_all_players(game_id):
+    df=get_match_events(game_id)
+    home_team, away_team = get_match_teams(game_id)
+    players_home = df[df['team'] == home_team]['player'].unique().tolist()
+    players_away = df[df['team'] == away_team]['player'].unique().tolist()
 
+    return players_home, players_away
+
+def get_players_with_shots(game_id):
+    shots = get_all_shots(game_id)
+    home_team, away_team = get_match_teams(game_id)
+    players_home = shots[shots['team'] == home_team]['player'].unique().tolist()
+    players_away = shots[shots['team'] == away_team]['player'].unique().tolist()
+    
+
+    return players_home, players_away
