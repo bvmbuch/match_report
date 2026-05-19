@@ -7,7 +7,4 @@ python-dotenv
 scikit-learn
 xgboost
 mplsoccer
-os
-pickle
-ast
-scipy
+seaborn
