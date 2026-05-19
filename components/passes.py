@@ -35,7 +35,7 @@ def render_passes_tab(game_id):
         successful_only=st.toggle("Show only successful passes", value=False, key="successful_pass_toggle")
         color = "#048520" if successful_only else "#4093FF"
 
-        pass_type=st.pills("Select pass type", ["All", "Progressive", "In final 3rd", "Into final 3rd", "Key Pass"], selection_mode="single", default="All", key="pass_type")
+        pass_type=st.pills("Select pass type", ["All", "Progressive", "In final 3rd", "Into final 3rd", "Key Pass", "Long Pass"], selection_mode="single", default="All", key="pass_type")
     
     with col2:
         if player_on:

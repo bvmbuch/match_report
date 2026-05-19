@@ -3,6 +3,12 @@ import numpy as np
 from data.queries import get_available_seasons, get_available_leagues, get_available_teams, get_available_matches, get_match_events, get_match_goals
 
 
+SET_PIECE_QUALIFIERS = {
+    'FreekickTaken': 'Free kick',
+    'CornerTaken': 'Corner',
+    'ThrowIn': 'Throw-in',
+}
+
 
 def has_qualifier(qualifiers, display_name):
     return any(q['type']['displayName'] == display_name for q in qualifiers)

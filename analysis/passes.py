@@ -20,6 +20,8 @@ def prepare_passes(game_id, team, player=None, successful_only=False, pass_type=
         team_passes = team_passes[team_passes['is_into_final_3rd'] == True]
     elif pass_type=='Key Pass':
         team_passes = team_passes[team_passes['qualifiers'].apply(lambda x: has_qualifier(x, 'KeyPass'))]
+    elif pass_type == 'Long Pass':
+        team_passes = team_passes[team_passes['qualifiers'].apply(lambda x: has_qualifier(x, 'Longball'))]
     if player:
         player_passes = team_passes[team_passes['player'] == player]
 
