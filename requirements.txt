@@ -1,0 +1,13 @@
+streamlit
+matplotlib
+psycopg2-binary
+pandas
+numpy
+python-dotenv
+scikit-learn
+xgboost
+mplsoccer
+os
+pickle
+ast
+scipy
