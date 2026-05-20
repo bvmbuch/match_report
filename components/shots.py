@@ -25,7 +25,7 @@ def render_shots_tab(game_id):
             return
         
         
-        npxg=st.toggle("Show non-penalty xG", value=False, key="npxg_toggle")
+        npxg=st.toggle("Include penalty shots", value=False, key="npxg_toggle")
 
         player_on=st.toggle("Show specific player", value=False, key="player_shots_toggle")
 
@@ -51,3 +51,12 @@ def render_shots_tab(game_id):
         xg_table = team_xg_table(game_id, team)
         st.subheader("Expected Goals (xG) by Player")
         st.table(xg_table)
+
+    with st.expander("How to read this tab"):
+        st.write("""
+        Shot map showing all shots taken in the match. Larger dots indicate higher xG. Green dots = goals scored.
+        
+        Filter options: select a team, exclude penalty kicks, or view shots for a specific player.
+        
+        The table on the right shows xG, total shots, and goals per player, sorted by xG.
+        """)

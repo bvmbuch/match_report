@@ -124,7 +124,18 @@ def match_info(game_id):
     with col3:
         fig= pass_network_plot(game_id, away_team)
         st.pyplot(fig, transparent=True)
+
+    with st.expander("How to read this tab"):
+        st.write("""
+        **Pass Network** shows the average position of players during passing, with line thickness indicating the number of passes exchanged between them. Filtered to the first substitution to keep exactly 11 players per team.
+        
+        **Stats table:**
+        - **xG** — Expected Goals: probability of scoring based on shot quality
+        - **npxG** — Non-Penalty xG: xG excluding penalty kicks
+        - **Field Tilt** — share of final third touches: team final third touches / total final third touches
+        - **PPDA** — Passes Allowed Per Defensive Action: lower = more aggressive pressing
+        """)
         
 
 
-    return 
+    

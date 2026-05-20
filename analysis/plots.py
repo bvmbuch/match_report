@@ -104,7 +104,7 @@ def xT_flow_plot(game_id):
 
 
 
-    fig, ax = plt.subplots(figsize=(12, 5), facecolor='#0C0D0E')
+    fig, ax = plt.subplots(figsize=(12, 8), facecolor='#0C0D0E')
     ax.set_facecolor('#0C0D0E')
 
     ax.bar(diff_smooth.index[diff_smooth >= 0], diff_smooth[diff_smooth >= 0], color='#3d91ce', alpha=0.6, label=home_team, width=0.71, linewidth=0)

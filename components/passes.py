@@ -50,3 +50,10 @@ def render_passes_tab(game_id):
         passes_table = team_passes_table(game_id, team)
         st.subheader("Passes by Player")
         st.table(passes_table)
+
+    with st.expander("How to read this tab"):
+        st.write("""
+        Pass map for the selected team. Filter by player or pass type: Progressive, In Final Third, Into Final Third, Key Pass, or Long Pass. Toggle to show only successful passes.
+        
+        The table on the right shows total passes and completion ratio per player.
+        """)

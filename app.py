@@ -17,10 +17,20 @@ from data.processing import get_score, get_match_teams, get_matches_display
 
 st.set_page_config(layout="wide")
 
-
+st.markdown("""
+    <style>
+    .stTabs [data-baseweb="tab"] p {
+        font-size: 18px !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 st.title("Match Report")
-st.write("This is a test")
+with st.expander("About this app"):
+    st.write("""
+        Select a season, league, team and match from the sidebar to explore an in-depth match report.
+        The report includes pass networks, shot maps with custom xG model, pass analysis, and xThreat visualizations.
+    """)
 st.sidebar.title("Options")
 
 option1 = st.sidebar.selectbox("Select a season", ["Select a season"] + get_available_seasons())
@@ -45,22 +55,20 @@ else:
 tab1, tab2, tab3, tab4 = st.tabs(["Match Info", "Shots", "Passes", "xT"])
 
 with tab1:
-    st.header("Match Info")
     if option4 != "Select a match":
         match_info(matches_dict[option4])
 with tab2:
-    #st.header("Shots")
+    
     if option4 != "Select a match":
 
         render_shots_tab(matches_dict[option4])
 with tab3:
-    st.header("Passes")
     if option4 != "Select a match":
         
         render_passes_tab(matches_dict[option4])
 
 with tab4:
-    st.header("Pass xT Flow")
+
     if option4 != "Select a match":
 
         render_xT_tab(matches_dict[option4])
