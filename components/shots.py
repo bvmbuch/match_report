@@ -25,7 +25,7 @@ def render_shots_tab(game_id):
             return
         
         
-        npxg=st.toggle("Include penalty shots", value=False, key="npxg_toggle")
+        npxg=st.toggle("Exclude penalty shots", value=False, key="npxg_toggle")
 
         player_on=st.toggle("Show specific player", value=False, key="player_shots_toggle")
 
